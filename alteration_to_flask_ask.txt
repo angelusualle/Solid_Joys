@@ -1,0 +1,12 @@
+On line 339 inserted:
+   def start_over(self):
+        """Sends Play Directive to resume playback at the 0 offset"""
+        directive = self._play_directive('REPLACE_ALL')
+        audio_item = {'stream': {}}
+        stream = audio_item['stream']
+        stream['url'] = current_stream.url
+        stream['token'] = current_stream.token
+        stream['offsetInMilliseconds'] = 0
+        directive['audioItem'] = audio_item
+        self._response['directives'].append(directive)
+        return self
