@@ -6,7 +6,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 ask = Ask(app, '/')
-logging.getLogger('flask_ask').setLevel(logging.Error)
+logging.getLogger('flask_ask').setLevel(logging.ERROR)
 API_URL = 'https://api.desiringgod.org/'
 
 
@@ -111,4 +111,4 @@ def return_ok():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

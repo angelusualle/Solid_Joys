@@ -11,7 +11,7 @@ On line 339 inserted (models.py) to allow start over functionality:
         self._response['directives'].append(directive)
         return self
 
-On line 774 inserted (core.py) the following to allow PlaybackController requests (forward backward irrelevant so null:
+On line 774 inserted (core.py) the following to allow PlaybackController  requests (forward backward irrelevant so null:
         elif 'PlayBackController' in request_type:
             return '''{
                 "version": "1.0",
