@@ -18,11 +18,27 @@ def launch():
     try:
         r = requests.get(url, headers={'Authorization': 'Token token="e6f600e7ee34870d05a55b28bc7e4a91"'})
         if r.status_code != 200:
-            return statement('I am having trouble playing the devotional. Please try again.').s
+            return statement('I am having trouble playing the devotional. Please try again.')
         data = r.json()
         try:
             sound_url = data['data'][0]['attributes']['audio_stream_url']
-            return audio('Here is a reading of today\'s devotional').play(sound_url)
+            title = data['data'][0]['attributes']['title']
+            subtitle = data['data'][0]['attributes']['subtitle']
+            background_url = data['data'][0]['attributes']['audio_stream_url']
+
+            audio_item = audio('Here is a reading of today\'s solid joys devotional from Desiring God').play(sound_url)
+            audio_item._response['directives'][0]['audioItem']['metadata'] = {
+                "title": title,
+                "subtitle": subtitle ,
+                "art": {
+                  "sources": [
+                    {
+                      "url": "https://s3.amazonaws.com/alexaskillresourcesabarranc/246x0w.jpg"
+                    }
+                  ]
+                }
+            }
+            return audio_item
         except Exception as err:
             logging.error(err)
             logging.error(data)
@@ -46,7 +62,7 @@ def unsupported_intent():
 @ask.intent('AMAZON.PauseIntent')
 def stop_audio():
     try:
-        return audio('Ok, stopping the audio').stop()
+        return audio('Ok, pausing the audio').stop()
     except Exception as err:
         logging.error(err)
         return statement('Nothing to pause.')
@@ -80,9 +96,19 @@ def stop():
         return statement('Nothing to stop or cancel.')
 
 
+@ask.on_playback_stopped()
+@ask.on_playback_failed()
+@ask.on_playback_finished()
+@ask.on_playback_nearly_finished()
+@ask.on_playback_started()
 @ask.session_ended
-def session_ended():
-    return '{}', 200
+def return_ok():
+    return '''{
+        "version": "1.0",
+        "sessionAttributes": {},
+        "response": {
+        }
+    }''', 200
 
 
 if __name__ == '__main__':

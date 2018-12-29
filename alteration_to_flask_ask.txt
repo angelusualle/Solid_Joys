@@ -1,4 +1,4 @@
-On line 339 inserted:
+On line 339 inserted (models.py) to allow start over functionality:
    def start_over(self):
         """Sends Play Directive to resume playback at the 0 offset"""
         directive = self._play_directive('REPLACE_ALL')
@@ -10,3 +10,11 @@ On line 339 inserted:
         directive['audioItem'] = audio_item
         self._response['directives'].append(directive)
         return self
+
+On line 774 inserted (core.py) the following to allow PlaybackController requests (forward backward irrelevant so null:
+        elif 'PlayBackController' in request_type:
+            return '''{
+                "version": "1.0",
+                "sessionAttributes": {},
+                "response": {
+                }
