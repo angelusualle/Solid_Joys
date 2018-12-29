@@ -6,12 +6,12 @@ from datetime import datetime
 
 app = Flask(__name__)
 ask = Ask(app, '/')
-logging.getLogger('flask_ask').setLevel(logging.ERROR)
+logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 API_URL = 'https://api.desiringgod.org/'
 
 
+@ask.default_intent
 @ask.launch
-@ask.default_intent()
 @ask.intent('AMAZON.FallbackIntent')
 def launch():
     day_of_year = datetime.now().timetuple().tm_yday
@@ -112,4 +112,4 @@ def return_ok():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
