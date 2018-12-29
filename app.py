@@ -6,7 +6,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 ask = Ask(app, '/')
-logging.getLogger('flask_ask').setLevel(logging.DEBUG)
+logging.getLogger('flask_ask').setLevel(logging.Error)
 API_URL = 'https://api.desiringgod.org/'
 
 
@@ -24,12 +24,11 @@ def launch():
             sound_url = data['data'][0]['attributes']['audio_stream_url']
             title = data['data'][0]['attributes']['title']
             subtitle = data['data'][0]['attributes']['subtitle']
-            background_url = data['data'][0]['attributes']['audio_stream_url']
 
             audio_item = audio('Here is a reading of today\'s solid joys devotional from Desiring God').play(sound_url)
             audio_item._response['directives'][0]['audioItem']['metadata'] = {
                 "title": title,
-                "subtitle": subtitle ,
+                "subtitle": subtitle,
                 "art": {
                   "sources": [
                     {
