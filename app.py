@@ -11,6 +11,7 @@ API_URL = 'https://api.desiringgod.org/'
 
 
 @ask.launch
+@ask.default_intent()
 @ask.intent('AMAZON.FallbackIntent')
 def launch():
     day_of_year = datetime.now().timetuple().tm_yday
@@ -55,7 +56,7 @@ def launch():
 @ask.intent('AMAZON.ShuffleOnIntent')
 @ask.intent('AMAZON.ShuffleOffIntent')
 def unsupported_intent():
-    return statement('I can\'t do this in this for a devotional.')
+    return statement('I can\'t do this since its a devotional.')
 
 
 @ask.intent('AMAZON.PauseIntent')
