@@ -35,12 +35,11 @@ def launch():
         try:
             sound_url = data['data'][0]['attributes']['audio_stream_url']
             title = data['data'][0]['attributes']['title']
-            subtitle = data['data'][0]['attributes']['subtitle']
 
             audio_item = audio('Here is a reading of today\'s solid joys devotional from Desiring God').play(sound_url)
             audio_item._response['directives'][0]['audioItem']['metadata'] = {
                 "title": title,
-                "subtitle": subtitle,
+                "subtitle": 'Desiring God',
                 "art": {
                   "sources": [
                     {
