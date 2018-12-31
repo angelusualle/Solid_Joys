@@ -3,6 +3,7 @@ import requests
 from flask import Flask
 from flask_ask import Ask, statement, audio
 from datetime import datetime
+import calendar
 
 app = Flask(__name__)
 ask = Ask(app, '/')
@@ -14,8 +15,18 @@ API_URL = 'https://api.desiringgod.org/'
 @ask.launch
 @ask.intent('AMAZON.FallbackIntent')
 def launch():
-    day_of_year = datetime.now().timetuple().tm_yday
-    url = API_URL + '/v0/collections/lojscgpq/resources?page[size]=1&page[number]=' + str(day_of_year + 1)
+    """
+    This method handles Alexa skill play requests
+    :return: json for response for Alexa
+    """
+    # Calculation of page number for DG API, leap year and current date effects index of page
+    now = datetime.now()
+    is_leap_year = calendar.isleap(now.year)
+    if is_leap_year or now < datetime.strptime('02-27-' + str(now.year) + ' 23:59:59.99', '%m-%d-%Y %H:%M:%S.%f'):
+        day_of_year = datetime.now().timetuple().tm_yday
+    else:
+        day_of_year = datetime.now().timetuple().tm_yday + 1
+    url = API_URL + '/v0/collections/lojscgpq/resources?page[size]=1&page[number]=' + str(day_of_year)
     try:
         r = requests.get(url, headers={'Authorization': 'Token token="e6f600e7ee34870d05a55b28bc7e4a91"'})
         if r.status_code != 200:
@@ -56,11 +67,19 @@ def launch():
 @ask.intent('AMAZON.ShuffleOnIntent')
 @ask.intent('AMAZON.ShuffleOffIntent')
 def unsupported_intent():
+    """
+    This method handles Alexa skill unsupported requests
+    :return: json for response for Alexa
+    """
     return statement('I can\'t do this since its a devotional.')
 
 
 @ask.intent('AMAZON.PauseIntent')
 def stop_audio():
+    """
+    This method handles Alexa skill pause requests
+    :return: json for response for Alexa
+    """
     try:
         return audio('Ok, pausing the audio').stop()
     except Exception as err:
@@ -70,6 +89,10 @@ def stop_audio():
 
 @ask.intent('AMAZON.StartOverIntent')
 def resume():
+    """
+    This method handles Alexa skill start over requests
+    :return: json for response for Alexa
+    """
     try:
         return audio('Starting over.').start_over()
     except Exception as err:
@@ -79,6 +102,10 @@ def resume():
 
 @ask.intent('AMAZON.ResumeIntent')
 def resume():
+    """
+    This method handles Alexa skill resume requests
+    :return: json for response for Alexa
+    """
     try:
         return audio('Resuming.').resume()
     except Exception as err:
@@ -89,6 +116,10 @@ def resume():
 @ask.intent('AMAZON.CancelIntent')
 @ask.intent('AMAZON.StopIntent')
 def stop():
+    """
+    This method handles Alexa skill stop and cancel requests
+    :return: json for response for Alexa
+    """
     try:
         return audio('Stopping').clear_queue(stop=True)
     except Exception as err:
@@ -103,6 +134,10 @@ def stop():
 @ask.on_playback_started()
 @ask.session_ended
 def return_ok():
+    """
+    This method handles Alexa skill null requests
+    :return: json for response for Alexa
+    """
     return '''{
         "version": "1.0",
         "sessionAttributes": {},
