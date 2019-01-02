@@ -43,7 +43,7 @@ def launch():
                 "art": {
                   "sources": [
                     {
-                      "url": "https://s3.amazonaws.com/alexaskillresourcesabarranc/246x0w.jpg"
+                      "url": "https://s3.amazonaws.com/alexaskillresourcesabarranc/icon.jpg"
                     }
                   ]
                 }
