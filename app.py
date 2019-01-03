@@ -1,5 +1,7 @@
 import logging
 import requests
+import pytz
+from datetime import timezone
 from flask import Flask
 from flask_ask import Ask, statement, audio
 from datetime import datetime
@@ -20,9 +22,18 @@ def launch():
     :return: json for response for Alexa
     """
     # Calculation of page number for DG API, leap year and current date effects index of page
-    now = datetime.now()
+    try:
+        device_id = ask.context['System']['device']['deviceId']
+        api_access_token = ask.context['System']['apiAccessToken']
+        settings_api_url = 'https://api.amazonalexa.com'
+        r = requests.get(settings_api_url + '/v2/devices/' + device_id + '/settings/System.timeZone', headers={'Authorization': 'Bearer ' + api_access_token})
+        zone = r.text
+        now = datetime.now(pytz.timezone(zone.replace('"', '')))
+    except Exception as err:
+        now = datetime.now()
+        logging.error('Couldnt get user time zone', err)
     is_leap_year = calendar.isleap(now.year)
-    if is_leap_year or now < datetime.strptime('02-27-' + str(now.year) + ' 23:59:59.99', '%m-%d-%Y %H:%M:%S.%f'):
+    if is_leap_year or now < pytz.UTC.localize(datetime.strptime('02-27-' + str(now.year) + ' 23:59:59.99', '%m-%d-%Y %H:%M:%S.%f'), now):
         day_of_year = datetime.now().timetuple().tm_yday
     else:
         day_of_year = datetime.now().timetuple().tm_yday + 1
