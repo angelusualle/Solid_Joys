@@ -34,9 +34,9 @@ def launch():
         logging.error('Couldnt get user time zone', err)
     is_leap_year = calendar.isleap(now.year)
     if is_leap_year or now < pytz.UTC.localize(datetime.strptime('02-27-' + str(now.year) + ' 23:59:59.99', '%m-%d-%Y %H:%M:%S.%f'), now):
-        day_of_year = datetime.now().timetuple().tm_yday
+        day_of_year = now.timetuple().tm_yday
     else:
-        day_of_year = datetime.now().timetuple().tm_yday + 1
+        day_of_year = now.timetuple().tm_yday + 1
     url = API_URL + '/v0/collections/lojscgpq/resources?page[size]=1&page[number]=' + str(day_of_year)
     try:
         r = requests.get(url, headers={'Authorization': 'Token token="e6f600e7ee34870d05a55b28bc7e4a91"'})
